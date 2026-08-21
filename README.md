@@ -28,7 +28,7 @@
 
 1. Clone the repository or download the archive:
    ```bash
-   git clone https://github.com/<your-username>/KusniX.git
+   git clone https://github.com/kusnirilla87/KusniX.git
    ```
 2. Place all files in a single folder, preferably `C:\kusnix\` (some `.bat` files reference this path directly).
 3. Make sure `pci.ids` is located next to the scripts (for readable PCI device names). An up-to-date version can be downloaded from [pci-ids.ucw.cz](https://pci-ids.ucw.cz/v2.2/pci.ids).
