@@ -59,6 +59,7 @@ echo			╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═
 echo             		      Tweaker[v1.4]
 echo ================================================================================
 echo.
+echo.
 echo			[1] Налаштування Завдань Windows
 echo.
 echo		        [2] Налаштуваня MMCSS твіків
@@ -70,15 +71,14 @@ echo.
 echo			[5] Налаштування переривань(Interrupts)
 echo.
 echo			[6] Ввімкнути "Блокування маршрутизації переривань"
-echo.
-echo			[7] Відкрити BoosterX.exe		
+echo.		
 echo.
 echo ================================================================================   		
 echo.
 echo			[R] Сторінка виправлень (Увімкнути...)
 echo.
 echo ================================================================================
-set /p choice="Обери варіант (1-7, R): "
+set /p choice="Обери варіант (1-6, R): "
 
 if "%choice%"=="1" goto wintasks
 if "%choice%"=="2" goto MMCSStweaks
@@ -86,7 +86,6 @@ if "%choice%"=="3" goto diskclean
 if "%choice%"=="4" goto netadapter
 if "%choice%"=="5" goto interrupts
 if "%choice%"=="6" goto lockinro
-if "%choice%"=="7" start boosterx & goto menu
 
 if /i "%choice%"=="r" goto revert
 
