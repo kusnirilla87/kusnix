@@ -33,7 +33,7 @@
 2. Place all files in a single folder, preferably `C:\kusnix\` (some `.bat` files reference this path directly).
 3. Make sure `pci.ids` is located next to the scripts (for readable PCI device names). An up-to-date version can be downloaded from [pci-ids.ucw.cz](https://pci-ids.ucw.cz/v2.2/pci.ids).
 
-Or just download from Releases https://github.com/kusnirilla87/kusnix/releases/tag/KusniX
+Or just download from [Releases](https://github.com/kusnirilla87/kusnix/releases/tag/KusniX).
 ## Usage
 
 Run `KusniX.bat` — the main menu will open:
@@ -45,7 +45,6 @@ Run `KusniX.bat` — the main menu will open:
 [4] Network Adapter Settings (Ethernet)
 [5] Interrupt Settings
 [6] Enable "Interrupt Routing Lock"
-[7] Open BoosterX.exe
 [R] Fixes Page (Revert)
 ```
 
