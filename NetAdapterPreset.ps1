@@ -1,16 +1,16 @@
 ﻿#requires -RunAsAdministrator
 # =====================================================================
 #  NetAdapterPreset.ps1
-#  Автовизначення провід/Wi-Fi + Intel/Realtek, застосування пресетів
-#  розширених властивостей (Advanced Properties).
+#  Auto-detection of Wired/Wi-Fi + Intel/Realtek, applies presets
+#  for Advanced Properties.
 #
-#  Профілі:  1) Домашній ноутбук   2) Робочий ноутбук
-#            3) Домашній ПК        4) Ігровий ПК/ноутбук
+#  Profiles:  1) Home laptop   2) Work laptop
+#             3) Home PC       4) Gaming PC/laptop
 #
-#  Режими роботи:
-#    A) Авто   - визначає активний адаптер і його тип сам
-#    B) Ручний - показує список усіх адаптерів, вибираєш потрібний
-#    C) Обидва - застосовує пресет одразу і на Ethernet, і на Wi-Fi
+#  Operating modes:
+#    A) Auto   - detects the active adapter and its type automatically
+#    B) Manual - shows a list of all adapters, you pick the one you need
+#    C) Both   - applies the preset to both Ethernet and Wi-Fi at once
 # =====================================================================
 
 $OutputEncoding = [System.Text.Encoding]::UTF8
@@ -38,7 +38,7 @@ function Write-Sub($t, $color = "Gray") {
 }
 
 # ---------------------------------------------------------------------
-# Допоміжна функція застосування властивості
+# Helper function to apply a property
 # ---------------------------------------------------------------------
 function Set-Prop {
     param(
@@ -57,12 +57,12 @@ function Set-Prop {
     } catch {
         Write-Host ("   [") -ForegroundColor DarkGray -NoNewline
         Write-Host ("SKIP") -ForegroundColor Yellow -NoNewline
-        Write-Host ("] {0,-28} (властивість відсутня на цьому адаптері)" -f $Keyword) -ForegroundColor DarkGray
+        Write-Host ("] {0,-28} (property not present on this adapter)" -f $Keyword) -ForegroundColor DarkGray
     }
 }
 
 # ---------------------------------------------------------------------
-# Визначення типу (Ethernet/Wi-Fi) та виробника (Intel/Realtek)
+# Determine the type (Ethernet/Wi-Fi) and vendor (Intel/Realtek)
 # ---------------------------------------------------------------------
 function Get-AdapterKind {
     param($Adapter)
@@ -79,7 +79,7 @@ function Get-AdapterVendor {
 }
 
 # ---------------------------------------------------------------------
-# Реєстраційний шлях адаптера (клас мережевих адаптерів)
+# Adapter registry path (network adapter class)
 # ---------------------------------------------------------------------
 $script:ClassRoot = 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}'
 
@@ -97,8 +97,8 @@ function Get-AdapterRegistryPath {
 }
 
 # ---------------------------------------------------------------------
-# Визначення типу драйвера: NDIS (legacy) чи NetAdapterCx (сучасний)
-# Логіка з CHECK-NIC-DRIVER-TYPE.ps1
+# Determine the driver type: NDIS (legacy) or NetAdapterCx (modern)
+# Logic taken from CHECK-NIC-DRIVER-TYPE.ps1
 # ---------------------------------------------------------------------
 function Resolve-DriverImagePath {
     param([string]$ImagePath)
@@ -168,7 +168,7 @@ function Get-AdapterDriverType {
 }
 
 # ---------------------------------------------------------------------
-# Красива інфо-картка знайденого/обраного адаптера
+# Nice info card for the found/selected adapter
 # ---------------------------------------------------------------------
 function Show-AdapterCard {
     param($Adapter)
@@ -186,68 +186,68 @@ function Show-AdapterCard {
     Write-Host ""
     Write-Host "  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓" -ForegroundColor DarkGray
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "АДАПТЕР ЗНАЙДЕНО" -ForegroundColor White -NoNewline
-    Write-Host (" " * 46) -NoNewline
+    Write-Host "ADAPTER FOUND" -ForegroundColor White -NoNewline
+    Write-Host (" " * 49) -NoNewline
     Write-Host "┃" -ForegroundColor DarkGray
     Write-Host "  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫" -ForegroundColor DarkGray
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Назва       : " -ForegroundColor Gray -NoNewline
+    Write-Host "Name        : " -ForegroundColor Gray -NoNewline
     Write-Host $Adapter.Name -ForegroundColor White
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Опис        : " -ForegroundColor Gray -NoNewline
+    Write-Host "Description : " -ForegroundColor Gray -NoNewline
     Write-Host $Adapter.InterfaceDescription -ForegroundColor DarkCyan
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Статус      : " -ForegroundColor Gray -NoNewline
+    Write-Host "Status      : " -ForegroundColor Gray -NoNewline
     Write-Host $Adapter.Status -ForegroundColor $statusColor
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Тип з'єднання: " -ForegroundColor Gray -NoNewline
+    Write-Host "Connection type: " -ForegroundColor Gray -NoNewline
     Write-Host $kind -ForegroundColor $kindColor
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Виробник    : " -ForegroundColor Gray -NoNewline
+    Write-Host "Vendor      : " -ForegroundColor Gray -NoNewline
     Write-Host $vendor -ForegroundColor $vendorColor
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Тип драйвера: " -ForegroundColor Gray -NoNewline
+    Write-Host "Driver type : " -ForegroundColor Gray -NoNewline
     Write-Host $driverType -ForegroundColor $drvColor -NoNewline
     if ($driverType -eq "NetAdapterCx") {
-        Write-Host "  (сучасний, повна підтримка Advanced Properties)" -ForegroundColor DarkGray
+        Write-Host "  (modern, full Advanced Properties support)" -ForegroundColor DarkGray
     } elseif ($driverType -eq "NDIS") {
-        Write-Host "  (класичний NDIS-драйвер)" -ForegroundColor DarkGray
+        Write-Host "  (classic NDIS driver)" -ForegroundColor DarkGray
     } else {
         Write-Host ""
     }
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Швидкість   : " -ForegroundColor Gray -NoNewline
+    Write-Host "Speed       : " -ForegroundColor Gray -NoNewline
     Write-Host $Adapter.LinkSpeed -ForegroundColor White
 
     Write-Host "  ┃ " -ForegroundColor DarkGray -NoNewline
-    Write-Host "Реєстр      : " -ForegroundColor Gray -NoNewline
+    Write-Host "Registry    : " -ForegroundColor Gray -NoNewline
     if ($regPath) {
         Write-Host $regPath -ForegroundColor DarkYellow
     } else {
-        Write-Host "не вдалося визначити" -ForegroundColor DarkGray
+        Write-Host "could not be determined" -ForegroundColor DarkGray
     }
 
     Write-Host "  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛" -ForegroundColor DarkGray
 }
 
 # ---------------------------------------------------------------------
-# ПРЕСЕТИ. Структура: $Presets[Vendor][Kind][Profile] = @{ Keyword=Value }
-# Профілі: HomeLaptop, WorkLaptop, HomePC, GamePC
-# Коментарі відповідають зібраним таблицям (intel/realtek eth/wifi).
+# PRESETS. Structure: $Presets[Vendor][Kind][Profile] = @{ Keyword=Value }
+# Profiles: HomeLaptop, WorkLaptop, HomePC, GamePC
+# Comments correspond to the collected tables (intel/realtek eth/wifi).
 # ---------------------------------------------------------------------
 
 $Presets = @{}
 
 # ===================== INTEL ETHERNET =====================
-# Ключі й значення звірені з реального дампу реєстру (Ndi\Params) картки
-# Intel(R) Ethernet Connection (6) I219-LM користувача - 100% відповідність.
+# Keys and values verified against a real registry dump (Ndi\Params) of the
+# user's Intel(R) Ethernet Connection (6) I219-LM card - 100% match.
 $Presets.Intel = @{}
 $Presets.Intel.Ethernet = @{
     HomeLaptop = @{
@@ -275,7 +275,7 @@ $Presets.Intel.Ethernet = @{
         "*NumRssQueues"          = @("1","1 Queue")
         "*LsoV2IPv4"             = @("1","Enabled")
         "*IPChecksumOffloadIPv4" = @("3","Rx & Tx Enabled")
-        "*JumboPacket"           = @("1514","Disabled (без jumbo frames)")
+        "*JumboPacket"           = @("1514","Disabled (no jumbo frames)")
         "*FlowControl"           = @("3","Rx & Tx Enabled")
         "*InterruptModeration"  = @("1","Enabled")
     }
@@ -304,14 +304,14 @@ $Presets.Intel.Ethernet = @{
         "*NumRssQueues"          = @("1","1 Queue")
         "*LsoV2IPv4"             = @("1","Enabled")
         "*IPChecksumOffloadIPv4" = @("3","Rx & Tx Enabled")
-        "*JumboPacket"           = @("1514","Disabled (без jumbo frames)")
+        "*JumboPacket"           = @("1514","Disabled (no jumbo frames)")
         "*FlowControl"           = @("3","Rx & Tx Enabled")
         "*InterruptModeration"  = @("1","Enabled")
     }
     HomePC = @{
         "WaitAutoNegComplete"    = @("2","Wait for Link: Auto Detect")
         "WakeOnLink"             = @("0","Wake on Link Settings: Disabled")
-        "ReduceSpeedOnPowerDown" = @("0","Disabled (стаціонарний ПК)")
+        "ReduceSpeedOnPowerDown" = @("0","Disabled (desktop PC)")
         "SipsEnabled"            = @("0","System Idle Power Saver: Disabled")
         "MasterSlave"            = @("0","Gigabit Master Slave Mode: Auto Detect")
         "LinkNegotiationProcess" = @("1","Legacy Switch Compatibility Mode: Auto")
@@ -333,7 +333,7 @@ $Presets.Intel.Ethernet = @{
         "*NumRssQueues"          = @("2","2 Queues")
         "*LsoV2IPv4"             = @("1","Enabled")
         "*IPChecksumOffloadIPv4" = @("3","Rx & Tx Enabled")
-        "*JumboPacket"           = @("1514","Disabled (без jumbo frames)")
+        "*JumboPacket"           = @("1514","Disabled (no jumbo frames)")
         "*FlowControl"           = @("3","Rx & Tx Enabled")
         "*InterruptModeration"  = @("1","Enabled")
     }
@@ -360,13 +360,13 @@ $Presets.Intel.Ethernet = @{
         "*NumRssQueues"          = @("4","4 Queues")
         "*LsoV2IPv4"             = @("1","Enabled")
         "*IPChecksumOffloadIPv4" = @("3","Rx & Tx Enabled")
-        "*JumboPacket"           = @("1514","Disabled (без jumbo frames)")
-        "*FlowControl"           = @("0","Disabled (мін. джиттер)")
-        "*InterruptModeration"  = @("0","Disabled (мін. затримка)")
+        "*JumboPacket"           = @("1514","Disabled (no jumbo frames)")
+        "*FlowControl"           = @("0","Disabled (min. jitter)")
+        "*InterruptModeration"  = @("0","Disabled (min. latency)")
     }
 }
-# Спільні для Intel Ethernet значення, однакові для всіх 4 профілів
-# (взято 1:1 з твого intelethernet.txt - рядки без розбивки по колонках):
+# Common Intel Ethernet values, identical across all 4 profiles
+# (taken 1:1 from intelethernet.txt - lines that weren't split by column):
 foreach ($p in @("HomeLaptop","WorkLaptop","HomePC","GamePC")) {
     $Presets.Intel.Ethernet[$p]["*PMNSOffload"]           = @("1","Enabled")
     $Presets.Intel.Ethernet[$p]["*LsoV2IPv6"]              = @("1","Enabled")
@@ -375,79 +375,79 @@ foreach ($p in @("HomeLaptop","WorkLaptop","HomePC","GamePC")) {
 }
 
 # ===================== INTEL WI-FI =====================
-# Ключі й значення звірені з реального дампу реєстру (Ndi\Params) твоєї
-# Intel Wi-Fi картки - 100% відповідність (enum значення - реальні коди).
+# Keys and values verified against a real registry dump (Ndi\Params) of
+# the user's Intel Wi-Fi card - 100% match (enum values are real codes).
 $Presets.Intel.WiFi = @{
     HomeLaptop = @{
-        "uAPSDSupport"              = @("1","U-APSD: Увімкнено")
-        "ThroughputBoosterEnabled"  = @("1","Підсилювач пропускної здатності: Увімкнено")
-        "RoamingPreferredBandType"  = @("0","Бажаний діапазон: Без пріоритету")
-        "RoamAggressiveness"        = @("2","Агресивність роумінгу: Середня")
-        "MIMOPowerSaveMode"         = @("3","MIMO Power Save: Без SMPS")
-        "IbssTxPower"               = @("50","Потужність передачі: Середня")
-        "FatChannelIntolerant"      = @("0","Без переваги широкого каналу: Вимкнено")
-        "ChannelWidth24"            = @("1","Ширина каналу 2.4GHz: Автоматично (40MHz)")
-        "ChannelWidth52"            = @("1","Ширина каналу 5GHz: Автоматично (80MHz)")
+        "uAPSDSupport"              = @("1","U-APSD: Enabled")
+        "ThroughputBoosterEnabled"  = @("1","Throughput Booster: Enabled")
+        "RoamingPreferredBandType"  = @("0","Preferred Band: No Preference")
+        "RoamAggressiveness"        = @("2","Roaming Aggressiveness: Medium")
+        "MIMOPowerSaveMode"         = @("3","MIMO Power Save: No SMPS")
+        "IbssTxPower"               = @("50","Transmit Power: Medium")
+        "FatChannelIntolerant"      = @("0","Fat Channel Intolerant: Disabled")
+        "ChannelWidth24"            = @("1","2.4GHz Channel Width: Auto (40MHz)")
+        "ChannelWidth52"            = @("1","5GHz Channel Width: Auto (80MHz)")
         "CtsToItself"               = @("1","CTS-to-self Enabled")
-        "*PacketCoalescing"         = @("1","Об'єднання пакетів: Увімкнено")
-        "*DeviceSleepOnDisconnect"  = @("1","Сон при відключенні WoWLAN: Увімкнено")
+        "*PacketCoalescing"         = @("1","Packet Coalescing: Enabled")
+        "*DeviceSleepOnDisconnect"  = @("1","Sleep on WoWLAN Disconnect: Enabled")
     }
     WorkLaptop = @{
-        "uAPSDSupport"              = @("1","U-APSD: Увімкнено")
-        "ThroughputBoosterEnabled"  = @("0","Підсилювач пропускної здатності: Вимкнено")
-        "RoamingPreferredBandType"  = @("0","Бажаний діапазон: Без пріоритету")
-        "RoamAggressiveness"        = @("4","Агресивність роумінгу: Найвища")
-        "MIMOPowerSaveMode"         = @("0","MIMO Power Save: Автоматичний SMPS")
-        "IbssTxPower"               = @("50","Потужність передачі: Середня")
-        "FatChannelIntolerant"      = @("1","Без переваги широкого каналу: Увімкнено")
-        "ChannelWidth24"            = @("0","Ширина каналу 2.4GHz: Тільки 20MHz")
-        "ChannelWidth52"            = @("1","Ширина каналу 5GHz: Автоматично (80MHz)")
+        "uAPSDSupport"              = @("1","U-APSD: Enabled")
+        "ThroughputBoosterEnabled"  = @("0","Throughput Booster: Disabled")
+        "RoamingPreferredBandType"  = @("0","Preferred Band: No Preference")
+        "RoamAggressiveness"        = @("4","Roaming Aggressiveness: Highest")
+        "MIMOPowerSaveMode"         = @("0","MIMO Power Save: Automatic SMPS")
+        "IbssTxPower"               = @("50","Transmit Power: Medium")
+        "FatChannelIntolerant"      = @("1","Fat Channel Intolerant: Enabled")
+        "ChannelWidth24"            = @("0","2.4GHz Channel Width: 20MHz Only")
+        "ChannelWidth52"            = @("1","5GHz Channel Width: Auto (80MHz)")
         "CtsToItself"               = @("0","RTS/CTS Enabled")
-        "*PacketCoalescing"         = @("1","Об'єднання пакетів: Увімкнено")
-        "*DeviceSleepOnDisconnect"  = @("1","Сон при відключенні WoWLAN: Увімкнено")
+        "*PacketCoalescing"         = @("1","Packet Coalescing: Enabled")
+        "*DeviceSleepOnDisconnect"  = @("1","Sleep on WoWLAN Disconnect: Enabled")
     }
     HomePC = @{
-        "uAPSDSupport"              = @("0","U-APSD: Вимкнено")
-        "ThroughputBoosterEnabled"  = @("1","Підсилювач пропускної здатності: Увімкнено")
-        "RoamingPreferredBandType"  = @("2","Бажаний діапазон: 5 ГГц")
-        "RoamAggressiveness"        = @("2","Агресивність роумінгу: Середня")
-        "MIMOPowerSaveMode"         = @("3","MIMO Power Save: Без SMPS")
-        "IbssTxPower"               = @("100","Потужність передачі: Найвища")
-        "FatChannelIntolerant"      = @("0","Без переваги широкого каналу: Вимкнено")
-        "ChannelWidth24"            = @("1","Ширина каналу 2.4GHz: Автоматично (40MHz)")
-        "ChannelWidth52"            = @("1","Ширина каналу 5GHz: Автоматично (80MHz)")
+        "uAPSDSupport"              = @("0","U-APSD: Disabled")
+        "ThroughputBoosterEnabled"  = @("1","Throughput Booster: Enabled")
+        "RoamingPreferredBandType"  = @("2","Preferred Band: 5 GHz")
+        "RoamAggressiveness"        = @("2","Roaming Aggressiveness: Medium")
+        "MIMOPowerSaveMode"         = @("3","MIMO Power Save: No SMPS")
+        "IbssTxPower"               = @("100","Transmit Power: Highest")
+        "FatChannelIntolerant"      = @("0","Fat Channel Intolerant: Disabled")
+        "ChannelWidth24"            = @("1","2.4GHz Channel Width: Auto (40MHz)")
+        "ChannelWidth52"            = @("1","5GHz Channel Width: Auto (80MHz)")
         "CtsToItself"               = @("1","CTS-to-self Enabled")
-        "*PacketCoalescing"         = @("0","Об'єднання пакетів: Вимкнено")
-        "*DeviceSleepOnDisconnect"  = @("0","Сон при відключенні WoWLAN: Вимкнено")
+        "*PacketCoalescing"         = @("0","Packet Coalescing: Disabled")
+        "*DeviceSleepOnDisconnect"  = @("0","Sleep on WoWLAN Disconnect: Disabled")
     }
     GamePC = @{
-        "uAPSDSupport"              = @("0","U-APSD: Вимкнено")
-        "ThroughputBoosterEnabled"  = @("1","Підсилювач пропускної здатності: Увімкнено")
-        "RoamingPreferredBandType"  = @("2","Бажаний діапазон: 5 ГГц")
-        "RoamAggressiveness"        = @("0","Агресивність роумінгу: Найнижча")
-        "MIMOPowerSaveMode"         = @("3","MIMO Power Save: Без SMPS")
-        "IbssTxPower"               = @("100","Потужність передачі: Найвища")
-        "FatChannelIntolerant"      = @("0","Без переваги широкого каналу: Вимкнено")
-        "ChannelWidth24"            = @("1","Ширина каналу 2.4GHz: Автоматично (40MHz)")
-        "ChannelWidth52"            = @("1","Ширина каналу 5GHz: Автоматично (80MHz)")
+        "uAPSDSupport"              = @("0","U-APSD: Disabled")
+        "ThroughputBoosterEnabled"  = @("1","Throughput Booster: Enabled")
+        "RoamingPreferredBandType"  = @("2","Preferred Band: 5 GHz")
+        "RoamAggressiveness"        = @("0","Roaming Aggressiveness: Lowest")
+        "MIMOPowerSaveMode"         = @("3","MIMO Power Save: No SMPS")
+        "IbssTxPower"               = @("100","Transmit Power: Highest")
+        "FatChannelIntolerant"      = @("0","Fat Channel Intolerant: Disabled")
+        "ChannelWidth24"            = @("1","2.4GHz Channel Width: Auto (40MHz)")
+        "ChannelWidth52"            = @("1","5GHz Channel Width: Auto (80MHz)")
         "CtsToItself"               = @("1","CTS-to-self Enabled")
-        "*PacketCoalescing"         = @("0","Об'єднання пакетів: Вимкнено")
-        "*DeviceSleepOnDisconnect"  = @("0","Сон при відключенні WoWLAN: Вимкнено")
+        "*PacketCoalescing"         = @("0","Packet Coalescing: Disabled")
+        "*DeviceSleepOnDisconnect"  = @("0","Sleep on WoWLAN Disconnect: Disabled")
     }
 }
-# Спільні для Intel Wi-Fi значення, однакові для всіх 4 профілів
-# (взято 1:1 з твого intelwifi.txt - рядки без розбивки по колонках):
+# Common Intel Wi-Fi values, identical across all 4 profiles
+# (taken 1:1 from intelwifi.txt - lines that weren't split by column):
 foreach ($p in @("HomeLaptop","WorkLaptop","HomePC","GamePC")) {
     $Presets.Intel.WiFi[$p]["*WakeOnMagicPacket"] = @("0","Disabled")
     $Presets.Intel.WiFi[$p]["*WakeOnPattern"]     = @("0","Disabled")
     $Presets.Intel.WiFi[$p]["*PMWiFiRekeyOffload"]= @("1","Enabled")
     $Presets.Intel.WiFi[$p]["*PMARPOffload"]      = @("1","Enabled")
-    $Presets.Intel.WiFi[$p]["IEEE11nMode"]        = @("2","802.11ac: Увімкнено")
+    $Presets.Intel.WiFi[$p]["IEEE11nMode"]        = @("2","802.11ac: Enabled")
 }
 
 # ===================== REALTEK ETHERNET =====================
-# Ключі й значення звірені з реального дампу реєстру (Ndi\params) картки
-# Realtek PCIe GbE Family Controller користувача - 100% відповідність.
+# Keys and values verified against a real registry dump (Ndi\Params) of the
+# user's Realtek PCIe GbE Family Controller card - 100% match.
 $Presets.Realtek = @{}
 $Presets.Realtek.Ethernet = @{
     HomeLaptop = @{
@@ -466,13 +466,13 @@ $Presets.Realtek.Ethernet = @{
         "*NumRssQueues"             = @("2","2 Queues")
     }
     GamePC = @{
-        "*FlowControl"              = @("0","Disabled (мін. джиттер)")
-        "*InterruptModeration"      = @("0","Disabled (мін. затримка)")
+        "*FlowControl"              = @("0","Disabled (min. jitter)")
+        "*InterruptModeration"      = @("0","Disabled (min. latency)")
         "*NumRssQueues"             = @("4","4 Queues")
     }
 }
-# Спільні для Realtek Ethernet значення, однакові для всіх 4 профілів
-# (взято 1:1 з твого realtekETHERNEt.txt - там ці рядки без розбивки по колонках):
+# Common Realtek Ethernet values, identical across all 4 profiles
+# (taken 1:1 from realtekETHERNEt.txt - lines that weren't split by column):
 foreach ($p in @("HomeLaptop","WorkLaptop","HomePC","GamePC")) {
     $Presets.Realtek.Ethernet[$p]["*EEE"]                    = @("0","Disabled")
     $Presets.Realtek.Ethernet[$p]["AutoDisableGigabit"]      = @("0","Disabled")
@@ -495,14 +495,14 @@ foreach ($p in @("HomeLaptop","WorkLaptop","HomePC","GamePC")) {
     $Presets.Realtek.Ethernet[$p]["*PMNSOffload"]            = @("1","Enabled")
     $Presets.Realtek.Ethernet[$p]["*LsoV2IPv4"]              = @("1","Enabled")
     $Presets.Realtek.Ethernet[$p]["*LsoV2IPv6"]              = @("1","Enabled")
-    $Presets.Realtek.Ethernet[$p]["*JumboPacket"]            = @("1514","Disabled (без jumbo frames)")
+    $Presets.Realtek.Ethernet[$p]["*JumboPacket"]            = @("1514","Disabled (no jumbo frames)")
     $Presets.Realtek.Ethernet[$p]["*IPChecksumOffloadIPv4"]  = @("3","Rx & Tx Enabled")
 }
 
 # ===================== REALTEK WI-FI =====================
-# Ключі й значення звірені з реального дампу реєстру (Ndi\params) картки
-# Realtek RTL8822CE 802.11ac PCIe Adapter користувача - 100% відповідність.
-# Важливо: WakeOnDisconnect має ІНВЕРТОВАНИЙ enum (0=Enabled, 1=Disabled)!
+# Keys and values verified against a real registry dump (Ndi\Params) of the
+# user's Realtek RTL8822CE 802.11ac PCIe Adapter card - 100% match.
+# Important: WakeOnDisconnect has an INVERTED enum (0=Enabled, 1=Disabled)!
 $Presets.Realtek.WiFi = @{
     HomeLaptop = @{
         "WakeOnDisconnect"     = @("0","Sleep on WoWLAN disconnect: Enabled")
@@ -537,8 +537,8 @@ $Presets.Realtek.WiFi = @{
         "BW40MHzFor2G"         = @("1","2.4GHz: Auto (40MHz)")
     }
 }
-# Спільні для Realtek Wi-Fi значення, однакові для всіх 4 профілів
-# (взято 1:1 з твого realtekWIFI.txt - рядки без розбивки по колонках):
+# Common Realtek Wi-Fi values, identical across all 4 profiles
+# (taken 1:1 from realtekWIFI.txt - lines that weren't split by column):
 foreach ($p in @("HomeLaptop","WorkLaptop","HomePC","GamePC")) {
     $Presets.Realtek.WiFi[$p]["WirelessMode"]         = @("7","Default (802.11a/b/g + n/ac)")
     $Presets.Realtek.WiFi[$p]["*WakeOnMagicPacket"]   = @("0","Disabled")
@@ -559,14 +559,14 @@ $ProfileNames = @{
     "4" = "GamePC"
 }
 $ProfileLabels = @{
-    "HomeLaptop" = "Домашній ноутбук"
-    "WorkLaptop" = "Робочий ноутбук"
-    "HomePC"     = "Домашній ПК"
-    "GamePC"     = "Ігровий ПК/ноутбук"
+    "HomeLaptop" = "Home laptop"
+    "WorkLaptop" = "Work laptop"
+    "HomePC"     = "Home PC"
+    "GamePC"     = "Gaming PC/laptop"
 }
 
 # ---------------------------------------------------------------------
-# Застосування пресету до конкретного адаптера
+# Apply the preset to a specific adapter
 # ---------------------------------------------------------------------
 function Apply-Preset {
     param($Adapter, [string]$ProfileKey)
@@ -577,11 +577,11 @@ function Apply-Preset {
     Write-Head "$($Adapter.Name) [$vendor $kind] -> $($ProfileLabels[$ProfileKey])"
 
     if ($vendor -eq "Unknown") {
-        Write-Host "  Не вдалось визначити виробника (не Intel/Realtek). Пропущено." -ForegroundColor Red
+        Write-Host "  Could not determine the vendor (not Intel/Realtek). Skipped." -ForegroundColor Red
         return
     }
     if (-not $Presets.ContainsKey($vendor) -or -not $Presets[$vendor].ContainsKey($kind)) {
-        Write-Host "  Немає пресету для $vendor $kind." -ForegroundColor Red
+        Write-Host "  No preset for $vendor $kind." -ForegroundColor Red
         return
     }
 
@@ -594,7 +594,7 @@ function Apply-Preset {
 }
 
 # ---------------------------------------------------------------------
-# Пошук активного адаптера (для авто-режиму)
+# Find the active adapter (for auto mode)
 # ---------------------------------------------------------------------
 function Get-ActiveAdapter {
     $defaultRoute = Get-NetRoute -DestinationPrefix '0.0.0.0/0' -ErrorAction SilentlyContinue |
@@ -619,45 +619,45 @@ function Get-AllPhysicalAdapters {
 }
 
 # ---------------------------------------------------------------------
-# Вибір профілю
+# Profile selection
 # ---------------------------------------------------------------------
 function Choose-Profile {
-    Write-Head "Виберіть пресет"
+    Write-Head "Choose a preset"
     Write-Host "  1) " -ForegroundColor White -NoNewline
-    Write-Host "Домашній ноутбук" -ForegroundColor Gray
+    Write-Host "Home laptop" -ForegroundColor Gray
     Write-Host "  2) " -ForegroundColor White -NoNewline
-    Write-Host "Робочий ноутбук" -ForegroundColor Gray
+    Write-Host "Work laptop" -ForegroundColor Gray
     Write-Host "  3) " -ForegroundColor White -NoNewline
-    Write-Host "Домашній ПК" -ForegroundColor Gray
+    Write-Host "Home PC" -ForegroundColor Gray
     Write-Host "  4) " -ForegroundColor White -NoNewline
-    Write-Host "Ігровий ПК/ноутбук" -ForegroundColor Gray
+    Write-Host "Gaming PC/laptop" -ForegroundColor Gray
     Write-Host "  0) " -ForegroundColor White -NoNewline
-    Write-Host "Назад" -ForegroundColor DarkGray
-    $c = Read-Host "`nВаш вибір"
+    Write-Host "Back" -ForegroundColor DarkGray
+    $c = Read-Host "`nYour choice"
     if ($c -eq "0") { return $null }
     if (-not $ProfileNames.ContainsKey($c)) {
-        Write-Host "Невірний вибір." -ForegroundColor Red
+        Write-Host "Invalid choice." -ForegroundColor Red
         return Choose-Profile
     }
     return $ProfileNames[$c]
 }
 
 # ---------------------------------------------------------------------
-# Головне меню
+# Main menu
 # ---------------------------------------------------------------------
 Write-Banner
 
 :main while ($true) {
-    Write-Head "Головне меню"
+    Write-Head "Main menu"
     Write-Host "  1) " -ForegroundColor White -NoNewline
-    Write-Host "Авто-визначення активного адаптера" -ForegroundColor Gray
+    Write-Host "Auto-detect the active adapter" -ForegroundColor Gray
     Write-Host "  2) " -ForegroundColor White -NoNewline
-    Write-Host "Ручний вибір адаптера" -ForegroundColor Gray
+    Write-Host "Manually select an adapter" -ForegroundColor Gray
     Write-Host "  3) " -ForegroundColor White -NoNewline
-    Write-Host "Застосувати одразу і на Ethernet, і на Wi-Fi" -ForegroundColor Gray
+    Write-Host "Apply to both Ethernet and Wi-Fi at once" -ForegroundColor Gray
     Write-Host "  0) " -ForegroundColor White -NoNewline
-    Write-Host "Вихід" -ForegroundColor DarkGray
-    $mode = Read-Host "`nВаш вибір"
+    Write-Host "Exit" -ForegroundColor DarkGray
+    $mode = Read-Host "`nYour choice"
 
     if ($mode -eq "0") { exit }
 
@@ -666,10 +666,10 @@ Write-Banner
     switch ($mode) {
 
         "1" {
-            Write-Head "Пошук активного адаптера"
+            Write-Head "Searching for the active adapter"
             $adapter = Get-ActiveAdapter
             if (-not $adapter) {
-                Write-Host "  Активний адаптер не знайдено." -ForegroundColor Red
+                Write-Host "  No active adapter found." -ForegroundColor Red
                 continue main
             }
             Show-AdapterCard $adapter
@@ -683,10 +683,10 @@ Write-Banner
         "2" {
             $all = @(Get-AllPhysicalAdapters)
             if ($all.Count -eq 0) {
-                Write-Host "Адаптери не знайдено." -ForegroundColor Red
+                Write-Host "No adapters found." -ForegroundColor Red
                 continue main
             }
-            Write-Head "Доступні адаптери"
+            Write-Head "Available adapters"
             for ($i = 0; $i -lt $all.Count; $i++) {
                 $a = $all[$i]
                 $k = Get-AdapterKind $a
@@ -705,12 +705,12 @@ Write-Banner
                 Write-Host $a.Status -ForegroundColor $sColor
             }
             Write-Host "  0) " -ForegroundColor White -NoNewline
-            Write-Host "Назад" -ForegroundColor DarkGray
-            $sel = Read-Host "`nНомер адаптера"
+            Write-Host "Back" -ForegroundColor DarkGray
+            $sel = Read-Host "`nAdapter number"
             if ($sel -eq "0" -or -not $sel) { continue main }
             $idx = [int]$sel - 1
             if ($idx -lt 0 -or $idx -ge $all.Count) {
-                Write-Host "Невірний номер." -ForegroundColor Red
+                Write-Host "Invalid number." -ForegroundColor Red
                 continue main
             }
             $adapter = $all[$idx]
@@ -728,11 +728,11 @@ Write-Banner
             $wifiAdapters = @($all | Where-Object { (Get-AdapterKind $_) -eq "WiFi" })
 
             if ($ethAdapters.Count -eq 0 -and $wifiAdapters.Count -eq 0) {
-                Write-Host "Не знайдено ні Ethernet, ні Wi-Fi адаптерів." -ForegroundColor Red
+                Write-Host "No Ethernet or Wi-Fi adapters found." -ForegroundColor Red
                 continue main
             }
 
-            Write-Head "Знайдені адаптери для одночасного налаштування"
+            Write-Head "Adapters found for simultaneous configuration"
             foreach ($a in $ethAdapters)  { Show-AdapterCard $a }
             foreach ($a in $wifiAdapters) { Show-AdapterCard $a }
 
@@ -745,17 +745,17 @@ Write-Banner
         }
 
         default {
-            Write-Host "Невірний вибір." -ForegroundColor Red
+            Write-Host "Invalid choice." -ForegroundColor Red
             continue main
         }
     }
 
     if ($applied) {
-        Write-Head "Готово"
-        Write-Host "  Перевірити застосовані значення можна командою:" -ForegroundColor Gray
-        Write-Host '  Get-NetAdapterAdvancedProperty -Name "<Ім''я адаптера>" | Format-Table DisplayName,RegistryKeyword,RegistryValue -AutoSize' -ForegroundColor DarkYellow
+        Write-Head "Done"
+        Write-Host "  You can check the applied values with the command:" -ForegroundColor Gray
+        Write-Host '  Get-NetAdapterAdvancedProperty -Name "<Adapter name>" | Format-Table DisplayName,RegistryKeyword,RegistryValue -AutoSize' -ForegroundColor DarkYellow
         Write-Host ""
-        Write-Host "  Натисніть будь-яку клавішу, щоб повернутись до меню..." -ForegroundColor Cyan
+        Write-Host "  Press any key to return to the menu..." -ForegroundColor Cyan
         $null = [System.Console]::ReadKey($true)
     }
 }
