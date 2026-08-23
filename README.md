@@ -34,6 +34,19 @@
 3. Make sure `pci.ids` is located next to the scripts (for readable PCI device names). An up-to-date version can be downloaded from [pci-ids.ucw.cz](https://pci-ids.ucw.cz/v2.2/pci.ids).
 
 Or just download from [Releases](https://github.com/kusnirilla87/kusnix/releases/tag/KusniX).
+
+## Known Issues
+
+### Installer fails on launch with "ShellExecuteEx failed; code 8235. A referral was returned from the server"
+
+**Cause:** Windows blocks the installer's self-elevation (UAC), usually due to the "Only elevate executables that are signed and validated" policy or an unsigned installer — not a bug in the installer itself.
+
+**Fix:** Open an elevated Command Prompt (Win → type `cmd` → Ctrl+Shift+Enter or just run with admin) and run the installer directly from there:
+```
+cd C:\path\to\installer
+KusniXInstaller.exe
+```
+
 ## Usage
 
 Run `KusniX.bat` — the main menu will open:
