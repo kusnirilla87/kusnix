@@ -1,0 +1,3 @@
+@echo off
+reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\Connectivity\DisableCrossDeviceResume" /v value /t REG_DWORD /d 0 /f >nul
+exit
