@@ -8,7 +8,7 @@ schtasks /change /tn "Microsoft\Windows\Flighting\FeatureConfig\UsageDataReceive
 schtasks /change /tn "Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem" /disable
 schtasks /change /tn "Microsoft\Windows\RAC\RacTask" /disable
 schtasks /change /tn "Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser" /disable
-start "" "C:\kusnix\winstasks\pw.exe" "C:\kusnix\wintasks\msync.bat"
+start "" "C:\kusnix\WinTasks\pw.exe" cmd.exe /c "C:\kusnix\WinTasks\msync.bat"
 schtasks /change /tn "Microsoft\Windows\AppListBackup\Backup" /disable
 schtasks /change /tn "Microsoft\Windows\Chkdsk\ProactiveScan" /disable
 schtasks /change /tn "Microsoft\Windows\Diagnosis\RecommendedTroubleshootingScanner" /disable
