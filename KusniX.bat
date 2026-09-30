@@ -141,7 +141,7 @@ if "%choice%"=="5" start "" "c:\kusnix\wintasks\tlang" & goto wintasks
 if "%choice%"=="6" start "" "c:\kusnix\wintasks\tperf" & goto wintasks
 if "%choice%"=="7" start "" "c:\kusnix\wintasks\tmaps" & goto wintasks
 if "%choice%"=="8" start "" "c:\kusnix\wintasks\tanyd" & goto wintasks
-if "%choice%"=="9" start "" "c:\kusnix\wintasks\pw.exe" "c:\kusnix\wintasks\msync" & goto wintasks
+if "%choice%"=="9" start "" "C:\kusnix\WinTasks\pw.exe" cmd.exe /c "C:\kusnix\WinTasks\msync.bat" & goto wintasks
 if "%choice%"=="10" start "" "c:\kusnix\wintasks\tclean" & goto wintasks
 if "%choice%"=="11" start "" "c:\kusnix\wintasks\tmstore" & goto wintasks
 if "%choice%"=="12" start "" "c:\kusnix\wintasks\txbox" & goto wintasks
@@ -363,7 +363,7 @@ if "%choice%"=="5" start "" "c:\kusnix\revertpage\rtlang" & goto revert
 if "%choice%"=="6" start "" "c:\kusnix\revertpage\rtperf" & goto revert
 if "%choice%"=="7" start "" "c:\kusnix\revertpage\rtmaps" & goto revert
 if "%choice%"=="8" start "" "c:\kusnix\revertpage\rtanyd" & goto revert
-if "%choice%"=="9" start "" "c:\kusnix\wintasks\pw.exe" "c:\kusnix\revertpage\msyncc" & goto revert 
+if "%choice%"=="9" start "" "C:\kusnix\WinTasks\pw.exe" cmd.exe /c "C:\kusnix\WinTasks\msyncc.bat" & goto revert 
 if "%choice%"=="10" start "" "c:\kusnix\revertpage\rtclean" & goto revert
 if "%choice%"=="11" start "" "c:\kusnix\revertpage\rtmstore" & goto revert
 if "%choice%"=="12" start "" "c:\kusnix\revertpage\rtxbox" & goto revert
