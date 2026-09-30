@@ -67,5 +67,6 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 DISM.exe /Online /Set-ReservedStorageState /State:Enabled
 reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "InterruptSteeringFlags" /f
 start "" "c:\kusnix\wintasks\fso.reg
+start "" "C:\kusnix\WinTasks\pw.exe" cmd.exe /c "C:\kusnix\WinTasks\msyncc.bat"
 reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\Connectivity\DisableCrossDeviceResume" /v value /t REG_DWORD /d 0 /f >nul
 exit
