@@ -18,7 +18,7 @@
    ```bash
    git clone https://github.com/kusnirilla87/KusniX.git
    ```
-2. Place all files in a single folder `C:\kusnix\` (some `.bat` files reference this path directly).
+2. Place all files and folders in a single folder `C:\kusnix\` (some `.bat` files reference this path directly).
 3. Make sure `pci.ids` is located next to the scripts (for readable PCI device names). An up-to-date version can be downloaded from [pci-ids.ucw.cz](https://pci-ids.ucw.cz/v2.2/pci.ids).
 
 Or just download from [Releases](https://github.com/kusnirilla87/kusnix/releases/tag/KusniX).
@@ -40,13 +40,13 @@ KusniXInstaller.exe
 Run `KusniX.bat` — the main menu will open:
 
 ```
-[1] Windows Task Settings
-[2] MMCSS Tweaks
+[1] Windows Task Configuration
+[2] MMCSS Tweaks Configuration
 [3] Disk Cleanup (cache, junk, leftovers...)
 [4] Network Adapter Settings (Ethernet)
 [5] Interrupt Settings
-[6] Enable "Interrupt Routing Lock"
-[R] Fixes Page (Revert)
+[6] Enable "Lock Interrupt Routing"
+[R] Revert Page (Enable...)
 ```
 
 
