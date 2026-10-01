@@ -16,13 +16,13 @@ for /f "tokens=3" %%A in ('reg query "%regKey%" /v %valName% 2^>nul ^| findstr /
 )
 
 if "!curVal!"=="0x1" (
-    echo Поточне значення = 1. Змінюю на 0...
+    echo now = 1. Змінюю на 0...
     reg add "%regKey%" /v %valName% /t REG_DWORD /d 0 /f
-    echo Перезапускаю Explorer...
+    echo restarting Explorer...
     taskkill /f /im explorer.exe
     start explorer.exe
 ) else (
-    echo Значення вже 0 або відсутнє, змін не потрібно.
+    echo 0 already,not changing
 )
 
 endlocal
@@ -43,7 +43,7 @@ if "%1"=="admin" goto menu
 :: Проверка прав
 NET SESSION >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Запуск с правами администратора...
+    echo starting with admin...
     powershell -Command "Start-Process '%~f0' -ArgumentList 'admin' -Verb RunAs"
     exit /b
 )
@@ -59,28 +59,28 @@ echo			█████╔╝ ██║   ██║███████╗██
 echo			██╔═██╗ ██║   ██║╚════██║██║╚██╗██║██║     ██╔██╗ 
 echo			██║  ██╗╚██████╔╝███████║██║ ╚████║██║    ██╔╝ ██╗
 echo			╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝    ╚═╝  ╚═╝
-echo             		 Custom BoosterX Tweaker[v1.5]
+echo             		        Tweaker[v1.6]
 echo ================================================================================
 echo.
-echo			[1] Налаштування Завдань Windows
+echo			[1] Windows Tasks Configuration
 echo.
-echo		        [2] Налаштуваня MMCSS твіків
+echo		        [2] MMCSS Tweaks Configuration
 echo.
-echo			[3] Очищення диску(кеш, сміття, залишки...)		        
+echo			[3] Disk Cleanup (cache, junk, leftovers...)		        
 echo.
-echo			[4] Налаштування мережевого адаптера(Ethernet)
+echo			[4] Network Adapter (Ethernet) Configuration
 echo.
-echo			[5] Налаштування переривань(Interrupts)
+echo			[5] Interrupts Configuration
 echo.
-echo			[6] Ввімкнути "Блокування маршрутизації переривань"
+echo			[6] Enable "Lock Interrupt Routing"
 echo.		
 echo.
 echo ================================================================================   		
 echo.
-echo			[R] Сторінка виправлень (Увімкнути...)
+echo			[R] Revert Page (Enable...)
 echo.
 echo ================================================================================
-set /p choice="Обери варіант (1-6, R): "
+set /p choice="Choose (1-6, R): "
 
 if "%choice%"=="1" goto wintasks
 if "%choice%"=="2" goto MMCSStweaks
@@ -99,7 +99,7 @@ goto menu
 cls
 for /L %%i in (1, 1, 27) do echo.
 echo             ====================================================
-echo                Завантаження сторінки: Завдання Windows
+echo                	    Loading Page: Windows Tasks
 echo             ====================================================
 echo                [████████████████████████████████████████] 100%%
 echo             ====================================================
@@ -110,29 +110,29 @@ cls
 cls
 echo.
 echo  %C_BORDER%╔══════════════════════════════════════════════════════════════════════╗%RESET%
-echo  %C_BORDER%║%RESET% %C_TITLE% WINDOWS TASKS %C_MUTED%│ Оптимізація планувальника завдань%C_BORDER%                   ║%RESET%
+echo  %C_BORDER%║%RESET% %C_TITLE% WINDOWS TASKS %C_MUTED%│ Task Scheduler optimization%C_BORDER%                         ║%RESET%
 echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════╣%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Завдання Windows Insider    %C_NUM%[9]%C_TEXT%  Синхронізація Microsoft  %C_BORDER%    ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Завдання для аналізу        %C_NUM%[10]%C_TEXT% Завдання очищення       %C_BORDER%     ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[3]%C_TEXT%  Завдання діагностики        %C_NUM%[11]%C_TEXT% Завдання Microsoft Store%C_BORDER%     ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[4]%C_TEXT%  Автовизначення проксі       %C_NUM%[12]%C_TEXT% Завдання Xbox Live      %C_BORDER%     ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[5]%C_TEXT%  Встановлення/видалення мов  %C_NUM%[13]%C_TEXT% Оновлення політики     %C_BORDER%      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[6]%C_TEXT%  Автоперевірка продуктивн.   %C_NUM%[14]%C_TEXT% Завдання для HDD        %C_BORDER%     ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[7]%C_TEXT%  Карти та Геолокація         %C_NUM%[15]%C_TEXT% Сповіщення EOL          %C_BORDER%     ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[8]%C_TEXT%  Віддалене керування         %C_NUM%[16]%C_TEXT% Крос-девайс продовження      %C_BORDER%║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[17]%C_TEXT% Вимкнути FSO                                                  %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Windows Insider Task        %C_NUM%[9]%C_TEXT%  Microsoft Sync               %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Analytics Tasks             %C_NUM%[10]%C_TEXT% Cleanup Tasks                %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[3]%C_TEXT%  Diagnostics Tasks           %C_NUM%[11]%C_TEXT% Microsoft Store Tasks        %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[4]%C_TEXT%  Proxy Auto-Detection        %C_NUM%[12]%C_TEXT% Xbox Live Tasks              %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[5]%C_TEXT%  Language Install/Removal    %C_NUM%[13]%C_TEXT% Policy Update                %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[6]%C_TEXT%  Performance Auto-Check      %C_NUM%[14]%C_TEXT% HDD Tasks                    %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[7]%C_TEXT%  Maps ^& GPS	              %C_NUM%[15]%C_TEXT% EOL Notifications            %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[8]%C_TEXT%  Remote Management           %C_NUM%[16]%C_TEXT% Cross-Device Resume          %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[17]%C_TEXT% Disable FSO%C_BORDER%                                                   ║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
 echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════╣%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED% Головне Меню            %C_GREEN%[R]%C_MUTED% Сторінка виправлень (Увімкнути...)%C_BORDER% ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED% Main Menu                  %C_GREEN%[R]%C_MUTED% Fixes Page (Enable...)%C_BORDER%          ║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_ACCENT%[A]  ЗАСТОСУВАТИ УСІ ТВІКИ ВІДРАЗУ%C_BORDER%                               %C_BORDER%  ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_ACCENT%[A]  APPLY ALL TWEAKS AT ONCE%C_BORDER%                                      ║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
 echo  %C_BORDER%╚══════════════════════════════════════════════════════════════════════╝%RESET%
 echo.
-set /p choice="%C_PROMPT%  ❯%C_TEXT% Обери варіант %C_MUTED%(1-17, M, R, A)%C_TEXT%: %RESET%"
- 
+set /p choice="%C_PROMPT%  ❯%C_TEXT% Choose %C_MUTED%(1-17, M, R, A)%C_TEXT%: %RESET%"
+
 if "%choice%"=="1" start "" "c:\kusnix\wintasks\twinsider" & goto wintasks
 if "%choice%"=="2" start "" "c:\kusnix\wintasks\tanalisys" & goto wintasks
 if "%choice%"=="3" start "" "c:\kusnix\wintasks\tdiagn" & goto wintasks
@@ -162,23 +162,23 @@ goto wintasks
 :MMCSStweaks
 cls
 call C:\kusnix\mmcss\checknic.bat
-echo Якщо у вас драйвер мережевого адаптера(Wifi,Ethernet) на базі NDIS
+echo If your network adapter driver (Wifi,Ethernet) is NDIS-based
 echo.
-echo - Застосуйте файл Optimized-MMCSS-Settings.reg
-echo - Перевірте наявність затримок звуку в грі
-echo - Якщо затримок звуку немає, то більше нічого не змінюйтe
-echo - Якщо затримки звуку є (слабкий процесор + NVIDIA у версіях W11 24H2+)
-echo   то застосуйте Audio-Stutters-Fix.reg
+echo - Apply the Optimized-MMCSS-Settings.reg file
+echo - Check for audio delays in the game
+echo - If there are no audio delays, do not change anything else
+echo - If there are audio delays (weak CPU + NVIDIA on W11 24H2+ versions)
+echo   then apply Audio-Stutters-Fix.reg
 echo.
-echo Якщо у вас драйвер мережевого адаптера(Wifi,Ethernet) на базі NetAdapterCx
+echo If your network adapter driver (Wifi,Ethernet) is NetAdapterCx-based
 echo.
-echo - Застосуйте Disable-MMCSS.reg
-echo - Перевірте наявність переривань звуку в грі
-echo - Якщо затримок звуку немає, то більше нічого не змінюйтe
-echo - Якщо затримки звуку є (слабкий процесор + NVIDIA у версіях W11 24H2+)
-echo   то застосуйте Enable-MMCSS.reg та Optimized-MMCSS-Settings.reg
+echo - Apply Disable-MMCSS.reg
+echo - Check for audio interruptions in the game
+echo - If there are no audio delays, do not change anything else
+echo - If there are audio delays (weak CPU + NVIDIA on W11 24H2+ versions)
+echo   then apply Enable-MMCSS.reg and Optimized-MMCSS-Settings.reg
 echo.
-echo - Якщо затримки не зникли, застосуйте Audio-Stutters-Fix.reg
+echo - If the delays did not go away, apply Audio-Stutters-Fix.reg
 echo.
 echo.
 echo [1] Optimized-MMCSS-Settings.reg
@@ -202,7 +202,7 @@ goto menu
 cls
 for /L %%i in (1, 1, 27) do echo.
 echo             ====================================================
-echo                Завантаження сторінки: Очищення диску
+echo                	     Loading Page: Disk Cleanup
 echo             ====================================================
 echo                [████████████████████████████████████████] 100%%
 echo             ====================================================
@@ -212,25 +212,25 @@ chcp 65001 > nul
 cls
 echo.
 echo  %C_BORDER%╔══════════════════════════════════════════════════════════════════════════╗%RESET%
-echo  %C_BORDER%║%RESET% %C_TITLE% DISK CLEANUP %C_MUTED%│ Система обслуговування диску%C_BORDER%                             ║%RESET%
+echo  %C_BORDER%║%RESET% %C_TITLE% DISK CLEANUP %C_MUTED%│ Disk maintenance system%C_BORDER%                                  ║%RESET%
 echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════════╣%RESET%
 echo  %C_BORDER%║                                                                          ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_MUTED%[ ОСНОВНІ ОПЕРАЦІЇ ]%C_BORDER%                                                   ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Вимкнути "Зарезервоване сховище оновлень"                        %C_BORDER% ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Очистити "Кеш Windows Update"                                     %C_BORDER%║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[3]%C_TEXT%  Додаткове розширене очищення кешу                                 %C_BORDER%║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[4]%C_TEXT%  Видалені UWP додатки (залишки)                                    %C_BORDER%║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[5]%C_TEXT%  Очищення слідів активності                                        %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_MUTED%[ MAIN OPERATIONS ]%C_BORDER%                                                    ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Disable "Update Reserved Storage"%C_BORDER%                                 ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Clear "Windows Update Cache"%C_BORDER%                                      ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[3]%C_TEXT%  Additional advanced cache cleanup%C_BORDER%                                 ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[4]%C_TEXT%  Removed UWP apps (leftovers)%C_BORDER%                                      ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[5]%C_TEXT%  Clear activity traces%C_BORDER%                                             ║%RESET%
 echo  %C_BORDER%║                                                                          ║%RESET%
 echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════════╣%RESET%
 echo  %C_BORDER%║                                                                          ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED%  Головне Меню            %C_GREEN%[R]%C_MUTED%  Сторінка виправлень (Увімкнути...)%C_BORDER%   ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED%  Main Menu              %C_GREEN%[R]%C_MUTED%  Fixes Page (Enable...)%C_BORDER%                ║%RESET%
 echo  %C_BORDER%║                                                                          ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_ACCENT%[A]  ОЧИСТИТИ ВСЕ МИТТЄВО%C_BORDER%                                              ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_ACCENT%[A]  CLEAN EVERYTHING INSTANTLY%C_BORDER%                                        ║%RESET%
 echo  %C_BORDER%║                                                                          ║%RESET%
 echo  %C_BORDER%╚══════════════════════════════════════════════════════════════════════════╝%RESET%
 echo.
-set /p choice="%C_PROMPT%  ❯%C_TEXT% Обери варіант %C_MUTED%(1-5, M, R, A)%C_TEXT%: %RESET%"
+set /p choice="%C_PROMPT%  ❯%C_TEXT% Choose %C_MUTED%(1-5, M, R, A)%C_TEXT%: %RESET%"
 
 if "%choice%"=="1" start "" "c:\kusnix\diskclean\restorage.bat" & goto diskclean
 if "%choice%"=="2" start "" "c:\kusnix\diskclean\winupdatecache" & goto diskclean
@@ -249,7 +249,7 @@ goto diskclean
 cls
 for /L %%i in (1, 1, 27) do echo.
 echo             ====================================================
-echo            Завантаження сторінки: Налаштування мережевого адаптера
+echo            	   Loading Page: Network Adapter
 echo             ====================================================
 echo                [████████████████████████████████████████] 100%%
 echo             ====================================================
@@ -262,7 +262,7 @@ goto menu
 cls
 for /L %%i in (1, 1, 27) do echo.
 echo              ====================================================
-echo                 Завантаження сторінки: Переривання
+echo                 	Loading Page: Interrupts
 echo              ====================================================
 echo                 [████████████████████████████████████████] 100%%
 echo              ====================================================
@@ -270,26 +270,34 @@ timeout 1 >nul
 cls
 cls
 echo.
-echo  ======================================================================
-echo   SYSTEM INTERRUPT OPTIMIZER ^| MSI ^& CPU MANAGEMENT
-echo  ======================================================================
+echo  %C_BORDER%╔══════════════════════════════════════════════════════════════════════════╗%RESET%
+echo  %C_BORDER%║%RESET% %C_TITLE% INTERRUPTS %C_MUTED%│ MSI ^& CPU management%C_BORDER%                                       ║%RESET%
+echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════════╣%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_MUTED%[ MODULE OVERVIEW ]%C_BORDER%                                                    ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_TEXT%Automated suite for optimizing interrupt handling:%C_BORDER%                     ║%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_ACCENT%▸ %C_TEXT%Switch devices to MSI mode (Message Signaled Interrupts)%C_BORDER%             ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_ACCENT%▸ %C_TEXT%Balance IRQ priorities and pin them to CPU threads%C_BORDER%                   ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_ACCENT%▸ %C_TEXT%Fix and distribute network RSS queues (Receive Side Scaling)%C_BORDER%         ║%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════════╣%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_MUTED%[ SELECT ACTION ]%C_BORDER%                                                      ║%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Run automatic configuration%C_BORDER%                                       ║%RESET%
+echo  %C_BORDER%║%RESET%        %C_MUTED%Applies optimal settings for your hardware in one pass%C_BORDER%            ║%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Go to manual configuration%C_BORDER%                                        ║%RESET%
+echo  %C_BORDER%║%RESET%        %C_MUTED%Choose devices, IRQ priorities and CPU affinity yourself%C_BORDER%          ║%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════════╣%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED%  Back to main menu%C_BORDER%                                                 ║%RESET%
+echo  %C_BORDER%║                                                                          ║%RESET%
+echo  %C_BORDER%╚══════════════════════════════════════════════════════════════════════════╝%RESET%
 echo.
-echo   [ОПИС МОДУЛЯ]
-echo   Автоматичний комплекс для оптимізації обробки переривань:
-echo    * Переведення пристроїв у режим MSI (Message Signaled Interrupts)
-echo    * Балансування пріоритетів IRQ та прив'язка до потоків CPU
-echo    * Фіксація та розподіл мережевих черг RSS (Receive Side Scaling)
-echo.
-echo  ----------------------------------------------------------------------
-echo   [ОБЕРІТЬ ДІЮ]
-echo.
-echo    [1]  Запустити автоматичну конфігурацію
-echo    [2]  Перейти до ручного налаштування
-echo.
-echo    [M]  Повернутися до головного меню
-echo  ----------------------------------------------------------------------
-echo.
-set /p choice=: 
+set /p choice="%C_PROMPT%  ❯%C_TEXT% Choose %C_MUTED%(1, 2, M)%C_TEXT%: %RESET%"
 if "%choice%"=="1" goto autointerrupts
 if "%choice%"=="2" start C:\kusnix\interrupts\devicetweaker.bat & goto interrupts
 if "%choice%"=="m" goto menu
@@ -300,10 +308,10 @@ goto interrupts
 :autointerrupts
 cls
 echo =====================================================================
-echo                   ЗАСТОСУВАННЯ АВТО-ОПТИМІЗАЦІЇ...
+echo                   	     AUTO-OPTIMIZATION...
 echo =====================================================================
 echo.
-echo  Будь ласка, зачекайте. Йде визначення конфігурації та налаштування...
+echo  Please wait. Checking your PC specifications...
 echo.
 start C:\kusnix\interrupts\devicetweaker.bat
 goto autofinish
@@ -312,13 +320,13 @@ goto autofinish
 :autofinish
 cls
 echo =====================================================================
-echo                 ЗАСТОСУВАННЯ АВТО-ОПТИМІЗАЦІЇ...
+echo                 	    AUTO-OPTIMIZATION...
 echo =====================================================================
 echo.
-echo  [+] Щоб застосувати авто-оптимізацію, вам треба:
-echo  [+] Натиснути AUTO OPTIMIZATION
-echo  [+] Далі по черзі: No, Yes, Both, Ok
-echo  [+] Успіх! Можете перезавантажувати ПК для застосування всіх змін.
+echo  [+] To apply the auto-optimization, you need to:
+echo  [+] Click AUTO OPTIMIZATION
+echo  [+] Then, one by one: No, Yes, Both, Ok
+echo  [+] Success! You can restart your PC to apply all changes.
 echo.
 echo =====================================================================
 echo.
@@ -329,31 +337,31 @@ goto menu
 cls
 timeout /t 1 /nobreak > nul
 echo  %C_BORDER%╔══════════════════════════════════════════════════════════════════════╗%RESET%
-echo  %C_BORDER%║%RESET% %C_TITLE% RESTORE / FIXES %C_MUTED%│ Відновлення системних компонентів%C_BORDER%                 ║%RESET%
+echo  %C_BORDER%║%RESET% %C_TITLE% RESTORE / FIXES %C_MUTED%│ System components restoration%C_BORDER%                     ║%RESET%
 echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════╣%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_ACCENT%[!] УВАГА: ЦЕ СТОРІНКА ВИПРАВЛЕНЬ ТА ВІДНОВЛЕННЯ НАЛАШТУВАНЬ%C_BORDER%       ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_ACCENT%[!] WARNING: THIS IS THE FIXES AND SETTINGS RESTORATION PAGE%C_BORDER%       ║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Увімкнути Win Insider       %C_NUM%[10]%C_TEXT% Увімкнути Очищення        %C_BORDER%   ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Увімкнути Аналіз            %C_NUM%[11]%C_TEXT% Увімкнути MS Store        %C_BORDER%   ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[3]%C_TEXT%  Увімкнути Діагностику       %C_NUM%[12]%C_TEXT% Увімкнути Xbox Live       %C_BORDER%   ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[4]%C_TEXT%  Увімкнути Проксі            %C_NUM%[13]%C_TEXT% Увімкнути Політики        %C_BORDER%   ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[5]%C_TEXT%  Увімкнути Мови              %C_NUM%[14]%C_TEXT% Увімкнути Завдання HDD   %C_BORDER%    ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[6]%C_TEXT%  Увімкнути Продуктивність    %C_NUM%[15]%C_TEXT% Увімкнути Сповіщення     %C_BORDER%    ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[7]%C_TEXT%  Увімкнути Карти/Гео         %C_NUM%[16]%C_TEXT% Скинути SystemResponsiv. %C_BORDER%    ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[8]%C_TEXT%  Увімкнути Віддалене керув.  %C_NUM%[17]%C_TEXT% Увімкнути Зарезерв. схов.%C_BORDER%    ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[9]%C_TEXT%  Увімкнути Синхронізацію MS  %C_NUM%[18]%C_TEXT% Вимкн. блокув. переривань%C_BORDER%    ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_NUM%[19]%C_TEXT% Увімкнути крос-девайс       %C_NUM%[20]%C_TEXT% Ввімкнути FSO	%C_BORDER%        ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[1]%C_TEXT%  Enable Win Insider          %C_NUM%[10]%C_TEXT% Enable Cleanup               %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[2]%C_TEXT%  Enable Analytics            %C_NUM%[11]%C_TEXT% Enable MS Store              %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[3]%C_TEXT%  Enable Diagnostics          %C_NUM%[12]%C_TEXT% Enable Xbox Live             %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[4]%C_TEXT%  Enable Proxy                %C_NUM%[13]%C_TEXT% Enable Policies              %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[5]%C_TEXT%  Enable Languages            %C_NUM%[14]%C_TEXT% Enable HDD Tasks             %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[6]%C_TEXT%  Enable Performance          %C_NUM%[15]%C_TEXT% Enable Notifications         %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[7]%C_TEXT%  Enable Maps/Geo             %C_NUM%[16]%C_TEXT% Reset SystemResponsiveness   %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[8]%C_TEXT%  Enable Remote Management    %C_NUM%[17]%C_TEXT% Enable Reserved Storage      %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[9]%C_TEXT%  Enable Microsoft Sync       %C_NUM%[18]%C_TEXT% Disable interrupt blocking   %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_NUM%[19]%C_TEXT% Enable Cross-Device         %C_NUM%[20]%C_TEXT% Enable FSO                   %C_BORDER%║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
 echo  %C_BORDER%╠══════════════════════════════════════════════════════════════════════╣%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED% Головне Меню                                                   %C_BORDER%║%RESET%
+echo  %C_BORDER%║%RESET%   %C_GREEN%[M]%C_MUTED% Main Menu%C_BORDER%                                                      ║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
-echo  %C_BORDER%║%RESET%   %C_GREEN%[A]  ЗАСТОСУВАТИ УСІ ВИПРАВЛЕННЯ ВІДРАЗУ%C_BORDER%                           ║%RESET%
+echo  %C_BORDER%║%RESET%   %C_GREEN%[A]  APPLY ALL FIXES AT ONCE%C_BORDER%                                       ║%RESET%
 echo  %C_BORDER%║                                                                      ║%RESET%
 echo  %C_BORDER%╚══════════════════════════════════════════════════════════════════════╝%RESET%
 echo.
-set /p choice="%C_PROMPT%  ❯%C_TEXT% Обери варіант %C_MUTED%(1-20, M, A)%C_TEXT%: %RESET%"
+set /p choice="%C_PROMPT%  ❯%C_TEXT% Choose %C_MUTED%(1-20, M, A)%C_TEXT%: %RESET%"
 
 if "%choice%"=="1" start "" "c:\kusnix\revertpage\rtwininsider" & goto revert
 if "%choice%"=="2" start "" "c:\kusnix\revertpage\rtclean" & goto revert
@@ -376,7 +384,7 @@ if "%choice%"=="18" start "" "c:\kusnix\revertpage\rlockinro" & goto revert
 if "%choice%"=="19" start "" "c:\kusnix\revertpage\rcrossdevice" & goto revert
 if "%choice%"=="20" start "" "c:\kusnix\revertpage\fso.reg" & goto revert
 if "%choice%"=="a" start "" "c:\kusnix\revertpage\rall_tweaks" & goto revert
-if "%choice%"=="M" goto menu
+if "%choice%"=="m" goto menu
 
 echo ...
 timeout /t 1 > nul
