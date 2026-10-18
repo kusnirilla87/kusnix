@@ -57,3 +57,11 @@ These scripts modify registry settings, Windows services, and network driver pro
 - Back up your system / create a restore point before applying any tweaks.
 - Some presets (e.g., "Gaming PC") disable power saving and interrupt moderation — this may increase power consumption/heat output.
 - `pw.exe` (PowerRun) is third-party software not affiliated with this repository; it's used only as a helper launcher with elevated privileges.
+
+
+
+## Credits
+
+DnsJumper(by sordum.org) - DnsJumper.ini  DNS server list
+
+BoosterX for idea to create this project (thank you <3) 
