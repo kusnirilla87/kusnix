@@ -2,7 +2,7 @@
 setlocal EnableExtensions
 
 chcp 65001 > nul
-title KusniX Custom BoosterX
+title KusniX
 mode con: cols=80 lines=32
 color 0A
 setlocal enabledelayedexpansion
